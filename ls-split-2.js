@@ -3,7 +3,7 @@
 ///////////////////////////
 
 // Datepicker Setup
-document.querySelectorAll("[data-ls-date]").forEach((e, i) => {
+/*document.querySelectorAll("[data-ls-date]").forEach((e, i) => {
 	let x = e.getAttribute("data-ls-date");
 	if(!isNaN(x)) {x = Number(x)}
 	else {x = i + 100}
@@ -17,7 +17,7 @@ document.querySelectorAll("[data-ls-date]").forEach((e, i) => {
 			input.value = v
 		}
 	})
-});
+});*/
 
 function lsActiveInactive(e, x) {
 	let inac, ac, s1, s2, int;
