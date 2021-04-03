@@ -42,28 +42,6 @@ function lsActiveInactive(e, x) {
 		e.querySelector("[data-ls-int='" + int + "']").click()}
 }
 
-function lsUpdateURL() {
-	let x = "?";
-	lsRef.forEach(ls => {
-		if(ls.hasOwnProperty("id") && ls.hasOwnProperty("activeFilters")) {
-			let y = "";
-			for(z in ls.activeFilters) {
-				let a = ls.activeFilters[z], b;
-				if(a instanceof Date) {b = a.toISOString().split("T")[0]}
-				else if(Array.isArray(a)) {
-					b = "";
-					a.forEach(c => {b += "_" + c});
-					b = b.replace("_", "")
-				}
-				else {b = a}
-				if(b !== undefined) {y += "&" + z + "=" + b}
-			}
-			if(y != "") {x += "id=" + ls.id + y}
-		}
-	});
-	if(x != "?") {console.log(x)}
-}
-
 function lsUpdateCounters(lsId) {
 	if(lsId === undefined) {return}
 	lsRef.forEach(ls => {
