@@ -42,6 +42,8 @@ function lsActiveInactive(e, x) {
 		e.querySelector("[data-ls-int='" + int + "']").click()}
 }
 
+// lsUpdateURL
+
 function lsUpdateCounters(lsId) {
 	if(lsId === undefined) {return}
 	lsRef.forEach(ls => {
@@ -254,6 +256,10 @@ function lsUpdateFilters(lsId) {
 							else {x = Number(x)}
 						}
 						else if(y == "date") {x = new Date(x)}
+						else if(y == "range") {
+							x = x.split("-");
+							x.forEach((z, i) => {x[i] = Number(z)})
+						}
 					}
 					ls.activeFilters[e.getAttribute("data-ls-filter")] = x
 				}
@@ -294,3 +300,131 @@ function lsGetApi(url, callback) {
 	}
 	xhr.send()
 }
+
+/*function lsUpdateURL() {
+	let x = "?";
+	lsRef.forEach(ls => {
+		if(ls.hasOwnProperty("id") && ls.hasOwnProperty("activeFilters")) {
+			let y = "";
+			for(z in ls.activeFilters) {
+				let a = ls.activeFilters[z], b;
+				if(a instanceof Date) {
+					let utc = [a.getFullYear(), a.getMonth(), a.getDate()];
+					let c = new Date(Date.UTC(utc[0], utc[1], utc[2]));
+					b = c.toISOString().split("T")[0]
+				}
+				else if(Array.isArray(a)) {
+					b = "";
+					a.forEach(c => {b += "_" + c});
+					b = b.replace("_", "")
+				}
+				else {b = a}
+				if(b !== undefined) {y += "&" + z + "=" + b}
+			}
+			if(y != "") {x += "id=" + ls.id + y}
+		}
+	});
+	if(x == "?") {x = window.location.href.split("?")[0]}
+	window.history.replaceState({}, "", x)
+}
+
+// Initial Setup
+var lsRef = lsToArray(document.querySelectorAll("[data-ls='container']"));
+lsRef.forEach((ls, lsId) => {
+	ls.setAttribute("data-ls-id", lsId);
+	lsRef[lsId] = {"cont": ls, "id": lsId, "activeListings": -1}
+	ls = lsRef[lsId];
+	// API request
+	if(ls.cont.hasAttribute("data-ls-api")) {
+		lsGetApi(ls.cont.getAttribute("data-ls-api"), (err, data) => {
+			if(err !== null) {console.log("API GET Request error: " + err)}
+			else {ls.data = data; lsApplyFilters(lsId)}
+		})
+	}
+	// datepickers
+	if(ls.cont.querySelector("[data-ls-date]")) {
+		lsToArray(ls.cont.querySelectorAll("[data-ls-date]")).forEach((e, i) => {
+			let x = e.getAttribute("data-ls-date");
+			if(!isNaN(x)) {x = Number(x)}
+			else {x = i + 100}
+			if(!ls.hasOwnProperty("datepickers")) {ls.datepickers = []}
+			ls.datepickers.push(datepicker(e, {
+				id: x,
+				minDate: new Date(),
+				customDays: ["S", "M", "T", "W", "T", "S", "S"],
+				formatter: (input, date, instance) => {
+					let v = date.toDateString().replace(/^\S+\s/, "");
+					input.value = v
+				}
+			}))
+		})
+	}
+	// options // filters // listings // counters // updaters
+	if(ls.cont.hasAttribute("data-ls-options")) {
+		ls.cont.getAttribute("data-ls-options").split(",").forEach(o => {
+			o = o.split("=");
+			if(o.length >= 2) {
+				o.forEach((x, i) => {if(!isNaN(x)) {o[i] = Number(x)}});
+				if(o[0] == "pg") {
+					ls.pg = {"max": o[1], "page": 1}
+					let x = [
+						{"a": "previous", "b": "prev"},
+						{"a": "next", "b": "next"},
+						{"a": "number", "b": "numbers"}
+					];
+					x.forEach(y => {
+						let z = "[data-ls-pg='" + y.a + "']"
+						if(ls.cont.querySelector(z)) {
+							ls.pg[y.b] = lsToArray(ls.cont.querySelectorAll(z))}
+					})
+				}
+				else {ls.pg[o[0]] = o[1]}
+			}
+			else {ls.pg[o[0]] = true}
+		})
+	}
+	let x = [
+		{"a": "filter", "b": "filters"},
+		{"a": "listing", "b": "listings"},
+		{"a": "counter", "b": "counters"},
+		{"a": "update", "b": "updaters"}
+	];
+	x.forEach(y => {
+		let z = "[data-ls='" + y.a + "']"
+		if(ls.cont.querySelector(z)) {
+			ls[y.b] = lsToArray(ls.cont.querySelectorAll(z))}
+	});
+	if(ls.hasOwnProperty("updaters")) {
+		ls.updaters.forEach(e => {
+			e.addEventListener("click", () => {lsApplyFilters(lsId)})})
+	}
+	// URL params
+	if(window.location.href.includes("?") && ls.hasOwnProperty("filters")) {
+		let y = window.location.href.split("?")[1].split("&"), id;
+		y.forEach((z, i) => {
+			z = z.split("=");
+			if(z[0] == "id") {id = z[1]}
+			else if(id == ls.id) {
+				ls.filters.forEach(a => {
+					if(a.getAttribute("data-ls-filter") == z[0]) {
+						let b = a.getAttribute("data-ls-type");
+						if(b == "date" && ls.hasOwnProperty("datepickers")) {
+							ls.datepickers.forEach(dp => {
+								if(a == dp.el) {
+									let c = new Date(z[1]);
+									dp.setDate(c, true);
+									setTimeout(() => {
+										a.value = c.toDateString().replace(/^\S+\s/, "")}, 0)
+								}
+							})
+						}
+						else if(b == "range") {a.value = z[1].replace("_", "-")}
+						else {a.value = z[1]}
+						a.value = z[1]
+					}
+				})
+			}
+		});
+	}
+	console.log(lsRef)
+});*/
