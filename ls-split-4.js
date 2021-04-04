@@ -154,7 +154,12 @@ function lsUpdateListings(lsId) {
 						if(x >= y[0] && x <= y[1]) {z = true}}
 					else {z = true}
 				}
-				lsActiveInactive(e, z)
+				lsActiveInactive(e, z);
+				// map marker
+				if(e.querySelector("[data-mapbox-id]")) {
+					let f = document.querySelector("#" + e.querySelector("[data-mapbox-id]").getAttribute("data-mapbox-id"));
+					lsActiveInactive(f, z)
+				}
 			});
 			if(ls.hasOwnProperty("pg")) {lsUpdatePg(lsId)}
 		}
@@ -301,7 +306,7 @@ function lsGetApi(url, callback) {
 	xhr.send()
 }
 
-/*function lsUpdateURL() {
+function lsUpdateURL() {
 	let x = "?";
 	lsRef.forEach(ls => {
 		if(ls.hasOwnProperty("id") && ls.hasOwnProperty("activeFilters")) {
@@ -418,7 +423,15 @@ lsRef.forEach((ls, lsId) => {
 								}
 							})
 						}
-						else if(b == "range") {a.value = z[1].replace("_", "-")}
+						else if(b == "number") {
+							if(z[1].includes("_")) {z[1] = z[1].replace("_", "")}
+							a.value = z[1]
+						}
+						else if(b == "range") {
+							z[1] = z[1].replace("_", "-");
+							console.log(z[1]);
+							a.value = z[1]
+						}
 						else {a.value = z[1]}
 						a.value = z[1]
 					}
@@ -427,4 +440,4 @@ lsRef.forEach((ls, lsId) => {
 		});
 	}
 	console.log(lsRef)
-});*/
+});
