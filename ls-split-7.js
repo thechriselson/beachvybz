@@ -245,9 +245,10 @@ function lsUpdateFilters(lsId) {
 						}
 						else if(y == "date") {x = new Date(x)}
 						else if(y == "range") {
-							if(x.includes("+")) {x = [x.replace("=", ""), "+"]}
+							if(x.includes("+")) {x = [x.replace("+", ""), "+"]}
 							else if(x.includes("-")) {
 								x = x.split("-");
+								console.log(x);
 								if(x.length == 1) {x.push("-")}
 							}
 							x.forEach((z, i) => {if(!isNaN(z)) {x[i] = Number(z)}})
