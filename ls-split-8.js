@@ -249,7 +249,9 @@ function lsUpdateFilters(lsId) {
 							else if(x.includes("-")) {
 								x = x.split("-");
 								console.log(x);
-								if(x.length == 1) {x.push("-")}
+								x.forEach((z, i) => {if(z == "") {x[i] = "-"}})
+								console.log(x);
+								//if(x.length == 1) {x.push("-")}
 							}
 							x.forEach((z, i) => {if(!isNaN(z)) {x[i] = Number(z)}})
 						}
