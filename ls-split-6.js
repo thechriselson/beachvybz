@@ -2,23 +2,6 @@
 // LS => Listings System //
 ///////////////////////////
 
-// Datepicker Setup
-/*document.querySelectorAll("[data-ls-date]").forEach((e, i) => {
-	let x = e.getAttribute("data-ls-date");
-	if(!isNaN(x)) {x = Number(x)}
-	else {x = i + 100}
-	datepicker(e, {
-		// options
-		id: x,
-		minDate: new Date(),
-		customDays: ["S", "M", "T", "W", "T", "S", "S"],
-		formatter: (input, date, instance) => {
-			let v = date.toDateString().replace(/^\S+\s/, "");
-			input.value = v
-		}
-	})
-});*/
-
 function lsActiveInactive(e, x) {
 	let inac, ac, s1, s2, int;
 	if(e.hasAttribute("data-ls-inactive")) {
@@ -262,8 +245,12 @@ function lsUpdateFilters(lsId) {
 						}
 						else if(y == "date") {x = new Date(x)}
 						else if(y == "range") {
-							x = x.split("-");
-							x.forEach((z, i) => {x[i] = Number(z)})
+							if(x.includes("+")) {x = [x.replace("=", ""), "+"]}
+							else if(x.includes("-")) {
+								x = x.split("-");
+								if(x.length == 1) {x.push("-")}
+							}
+							x.forEach((z, i) => {if(!isNaN(z)) {x[i] = Number(z)}})
 						}
 					}
 					ls.activeFilters[e.getAttribute("data-ls-filter")] = x
