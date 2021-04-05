@@ -418,7 +418,9 @@ lsRef.forEach((ls, lsId) => {
 							a.value = z[1]
 						}
 						else if(b == "range") {
-							z[1] = z[1].replace("_", "-");
+							if(z[1].includes("+") || z[1].includes("-")) {
+								z[1] = z[1].replace("_", "")}
+							else {z[1] = z[1].replace("_", "-")}
 							console.log(z[1]);
 							a.value = z[1]
 						}
