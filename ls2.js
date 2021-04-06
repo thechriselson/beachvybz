@@ -307,6 +307,28 @@ function lsToArray(x) {
 }
 
 function lsDatawait(lsId, x) {
+	if(lsId === undefined || x === undefined) {return}
+	let y = true; if(x === true) {y = false}
+	lsRef.forEach(ls => {
+		if(ls.id == lsId && ls.hasOwnProperty("datawait")) {
+			let z = [];
+			if(ls.datawait.type == "all") {
+				ls.filters.forEach(e => {z.push(e)})}
+			else {z = ls.datawait.selected}
+			z.forEach(e => {lsActiveInactive(e, y); e.disabled = x});
+			//if(x === false && ls.datawait.type == "all") {lsApplyFilters(lsId)}
+			if(x === false) {
+				if(ls.datawait.type == "fallback") {
+					lsApplyFilters(lsId); ls.datawait.type = "all"}
+				else {
+					if(ls.datawait.type == "all") {lsApplyFilters(lsId)}
+					ls.datawait.loaded = true}
+			}
+		}
+	})
+}
+
+/*function lsDatawait(lsId, x) {
 	if(lsId == undefined || x == undefined) {return}
 	let y = false; if(x === false) {y = true}
 	lsRef.forEach(ls => {
@@ -326,7 +348,7 @@ function lsDatawait(lsId, x) {
 			}
 		}
 	})
-}
+}*/
 
 function lsGetApi(url, callback) {
 	let xhr = new XMLHttpRequest();
@@ -414,7 +436,7 @@ lsRef.forEach((ls, lsId) => {
 	let datawait = false;
 	if(ls.cont.hasAttribute("data-ls-api-wait")) {
 		let z = ls.cont.getAttribute("data-ls-api-wait");
-		ls.datawait = {"type": "selected", "selected": []}
+		ls.datawait = {"type": "selected", "selected": [], "loaded": false}
 		datawait = true;
 		if(z == "all") {ls.datawait.type = "all"}
 		else {
@@ -479,9 +501,13 @@ lsRef.forEach((ls, lsId) => {
 		if(ls.hasOwnProperty("filters")) {
 			ls.filters.forEach(e => {
 				ls.datawait.selected.forEach(f => {
-					if(e == f && e.value != "") {ls.datawait.type = "all"; return}
-				});
-				if(ls.datawait.type == "all") {return}
+					if(e == f && e.value != "") {ls.datawait.type = "all"; return}});
+				if(ls.datawait.type == "all") {
+					setTimeout(() => {
+						if(!ls.datawait.loaded) {
+							ls.datawait.type = "fallback"; lsDatawait(lsId, false)}
+						}, 5000);
+					return}
 			})
 		}
 		lsDatawait(lsId, true);
