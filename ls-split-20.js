@@ -312,6 +312,10 @@ function lsDatawait(lsId, x) {
 	lsRef.forEach(ls => {
 		if(ls.id == lsId && ls.hasOwnProperty("datawait")) {
 			if(ls.datawait.hasOwnProperty("type")) {
+				if(ls.datawait.type == "all") {
+					ls.datawait.selected = [];
+					ls.filters.forEach(e => {ls.datawait.selected.push(e)})
+				}
 				if(ls.datawait.hasOwnProperty("selected")) {
 					ls.datawait.selected.forEach(e => {
 						lsActiveInactive(e, y); e.disabled = x})
@@ -433,7 +437,7 @@ lsRef.forEach((ls, lsId) => {
 				}
 			})
 		}
-		lsDatawait(lsId, true)
+		//lsDatawait(lsId, true)
 	}
 	// URL params
 	if(window.location.href.includes("?") && ls.hasOwnProperty("filters")) {
@@ -473,6 +477,15 @@ lsRef.forEach((ls, lsId) => {
 		});
 	}
 	if(datawait) {
+		if(ls.hasOwnProperty("filters")) {
+			ls.filters.forEach(e => {
+				ls.datawait.selected.forEach(f => {
+					if(e == f && e.value != "") {ls.datawait.type = "all"; break}
+				});
+				if(ls.datawait.type == "all") {break}
+			})
+		}
+		lsDatawait(lsId, true);
 		if(ls.datawait.type == "selected") {setTimeout(() => {lsApplyFilters(lsId)}, 0)}
 	}
 	else {setTimeout(() => {lsUpdateFilters(lsId)}, 0)}
