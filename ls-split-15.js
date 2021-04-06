@@ -344,7 +344,7 @@ lsRef.forEach((ls, lsId) => {
 	if(ls.cont.hasAttribute("data-ls-api")) {
 		lsGetApi(ls.cont.getAttribute("data-ls-api"), (err, data) => {
 			if(err !== null) {console.log("API GET Request error: " + err)}
-			else {ls.data = data; lsDatawait(lsId, true)}
+			else {ls.data = data; lsDatawait(lsId, false)}
 		})
 	}
 	// datepickers
@@ -431,6 +431,7 @@ lsRef.forEach((ls, lsId) => {
 				}
 			})
 		}
+		lsDatawait(lsId, false)
 	}
 	// URL params
 	if(window.location.href.includes("?") && ls.hasOwnProperty("filters")) {
