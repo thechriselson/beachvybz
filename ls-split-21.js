@@ -480,9 +480,9 @@ lsRef.forEach((ls, lsId) => {
 		if(ls.hasOwnProperty("filters")) {
 			ls.filters.forEach(e => {
 				ls.datawait.selected.forEach(f => {
-					if(e == f && e.value != "") {ls.datawait.type = "all"; break}
+					if(e == f && e.value != "") {ls.datawait.type = "all"; return}
 				});
-				if(ls.datawait.type == "all") {break}
+				if(ls.datawait.type == "all") {return}
 			})
 		}
 		lsDatawait(lsId, true);
