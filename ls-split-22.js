@@ -320,8 +320,8 @@ function lsDatawait(lsId, x) {
 					ls.datawait.selected.forEach(e => {
 						lsActiveInactive(e, y); e.disabled = x})
 				}
-				if(x === true) {
-					if(ls.datawait.type == "full") {lsApplyFilters(lsId)}
+				if(x === false) {
+					if(ls.datawait.type == "all") {lsApplyFilters(lsId)}
 				}
 			}
 		}
