@@ -312,6 +312,7 @@ function lsDatawait(lsId, x) {
 		if(ls.id == lsId && ls.hasOwnProperty("datawait")) {
 			if(ls.datawait.hasOwnProperty("type")) {
 				if(ls.datawait.hasOwnProperty("selected")) {
+					lsActiveInactive(e, x);
 					ls.datawait.selected.forEach(e => {e.disabled = x})
 				}
 				if(x === true) {
