@@ -312,8 +312,8 @@ function lsDatawait(lsId, x) {
 		if(ls.id == lsId && ls.hasOwnProperty("datawait")) {
 			if(ls.datawait.hasOwnProperty("type")) {
 				if(ls.datawait.hasOwnProperty("selected")) {
-					lsActiveInactive(e, x);
-					ls.datawait.selected.forEach(e => {e.disabled = x})
+					ls.datawait.selected.forEach(e => {
+						lsActiveInactive(e, x); e.disabled = x})
 				}
 				if(x === true) {
 					if(ls.datawait.type == "full") {lsApplyFilters(lsId)}
