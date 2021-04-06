@@ -413,7 +413,9 @@ lsRef.forEach((ls, lsId) => {
 			z = z.split("&"); console.log(z);
 			z.forEach(a => {
 				if(a.includes("=")) {
+					console.log("INCLUDES =")
 					a = a.split("=");
+					console.log(a);
 					if(a[0] == "type") {
 						if(ls.hasOwnProperty("filters")) {ls.filters.forEach(e => {
 							if(e.hasAttribute("data-ls-type")) {
@@ -423,7 +425,7 @@ lsRef.forEach((ls, lsId) => {
 						})}
 					}
 				}
-				else {ls.datawait.selected.push(ls.cont.querySelector(a))}
+				else {console.log("SELECTOR"); ls.datawait.selected.push(ls.cont.querySelector(a))}
 			})
 		}
 	}
