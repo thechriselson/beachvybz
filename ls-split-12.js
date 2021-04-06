@@ -412,20 +412,25 @@ lsRef.forEach((ls, lsId) => {
 		else {
 			z = z.split("&"); console.log(z);
 			z.forEach(a => {
-				if(a.includes("=")) {
+				if(a.includes("[")) {
+					console.log("SELECTOR");
+					if(ls.cont.querySelector(a)) {
+						ls.datawait.selected.push(ls.cont.querySelector(a))}
+				}
+				else if(a.includes("=")) {
 					console.log("INCLUDES =")
 					a = a.split("=");
 					console.log(a);
 					if(a[0] == "type") {
 						if(ls.hasOwnProperty("filters")) {ls.filters.forEach(e => {
 							if(e.hasAttribute("data-ls-type")) {
-								if(e.getAttribute("data-ls-type") == z[1]) {
+								if(e.getAttribute("data-ls-type") == a[1]) {
 									ls.datawait.selected.push(e)}
 							}
 						})}
 					}
 				}
-				else {console.log("SELECTOR"); ls.datawait.selected.push(ls.cont.querySelector(a))}
+				//else {console.log("SELECTOR"); ls.datawait.selected.push(ls.cont.querySelector(a))}
 			})
 		}
 	}
