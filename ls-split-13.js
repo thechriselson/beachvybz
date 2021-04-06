@@ -306,16 +306,17 @@ function lsToArray(x) {
 	return y
 }
 
-function lsDatawait(lsId) {
-	if(lsId == undefined) {return}
+function lsDatawait(lsId, x) {
+	if(lsId == undefined || x == undefined) {return}
 	lsRef.forEach(ls => {
 		if(ls.id == lsId && ls.hasOwnProperty("datawait")) {
 			if(ls.datawait.hasOwnProperty("type")) {
-				if(ls.datawait.hasOwnProperty("fields")) {
-					ls.datawait.fields.forEach(e => {e.disabled = false})
+				if(ls.datawait.hasOwnProperty("selected")) {
+					ls.datawait.selected.forEach(e => {e.disabled = x})
 				}
-				if(ls.datawait.type == "fields") {}
-				else if(ls.datawait.type == "full") {lsApplyFilters(lsId)}
+				if(x === true) {
+					if(ls.datawait.type == "full") {lsApplyFilters(lsId)}
+				}
 			}
 		}
 	})
@@ -341,10 +342,9 @@ lsRef.forEach((ls, lsId) => {
 	ls = lsRef[lsId];
 	// API request
 	if(ls.cont.hasAttribute("data-ls-api")) {
-		//if(ls.cont.hasAttribute("data-ls-api-wait")) {ls.datawait = {"type": "fields"}}
 		lsGetApi(ls.cont.getAttribute("data-ls-api"), (err, data) => {
 			if(err !== null) {console.log("API GET Request error: " + err)}
-			else {ls.data = data; lsDatawait(lsId)}
+			else {ls.data = data; lsDatawait(lsId, true)}
 		})
 	}
 	// datepickers
@@ -405,22 +405,21 @@ lsRef.forEach((ls, lsId) => {
 			e.addEventListener("click", () => {lsApplyFilters(lsId)})})
 	}
 	// datawait
+	let datawait = false;
 	if(ls.cont.hasAttribute("data-ls-api-wait")) {
 		let z = ls.cont.getAttribute("data-ls-api-wait");
 		ls.datawait = {"type": "selected", "selected": []}
+		datawait = true;
 		if(z == "all") {ls.datawait.type = "all"}
 		else {
-			z = z.split("&"); console.log(z);
+			z = z.split("&");
 			z.forEach(a => {
 				if(a.includes("[")) {
-					console.log("SELECTOR");
 					if(ls.cont.querySelector(a)) {
 						ls.datawait.selected.push(ls.cont.querySelector(a))}
 				}
 				else if(a.includes("=")) {
-					console.log("INCLUDES =")
 					a = a.split("=");
-					console.log(a);
 					if(a[0] == "type") {
 						if(ls.hasOwnProperty("filters")) {ls.filters.forEach(e => {
 							if(e.hasAttribute("data-ls-type")) {
@@ -430,7 +429,6 @@ lsRef.forEach((ls, lsId) => {
 						})}
 					}
 				}
-				//else {console.log("SELECTOR"); ls.datawait.selected.push(ls.cont.querySelector(a))}
 			})
 		}
 	}
@@ -471,5 +469,9 @@ lsRef.forEach((ls, lsId) => {
 			}
 		});
 	}
+	if(datawait) {
+		if(ls.datawait.type == "selected") {lsApplyFilters(lsId)}
+	}
+	else {lsApplyFilters(lsId)}
 	console.log(lsRef)
 });
