@@ -470,8 +470,8 @@ lsRef.forEach((ls, lsId) => {
 		});
 	}
 	if(datawait) {
-		if(ls.datawait.type == "selected") {lsApplyFilters(lsId)}
+		if(ls.datawait.type == "selected") {setTimeout(() => {lsApplyFilters(lsId)}, 0)}
 	}
-	else {lsApplyFilters(lsId)}
+	else {setTimeout(() => {lsUpdateFilters(lsId)}, 0)}
 	console.log(lsRef)
 });
