@@ -505,8 +505,9 @@ lsRef.forEach((ls, lsId) => {
 				if(ls.datawait.type == "all") {
 					setTimeout(() => {
 						if(!ls.datawait.loaded) {
+							console.log("FALLBACK");
 							ls.datawait.type = "fallback"; lsDatawait(lsId, false)}
-						}, 5000);
+						}, 1000);
 					return}
 			})
 		}
