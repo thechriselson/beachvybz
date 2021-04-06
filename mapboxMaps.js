@@ -15,6 +15,7 @@ function mapboxMapsAddMarker(map, marker) {
 	let el = document.createElement("div");
 	el.className = marker.class;
 	if(marker.id) {el.id = marker.id}
+	if(marker.data) {el.setAttribute(marker.data[0], marker.data[1])}
 	// Add to map
 	if(marker.popup) {
 		new mapboxgl.Marker(el)
@@ -61,6 +62,8 @@ function mapboxMapsSetup(container) {
 		if(mData.mapboxOptions) {marker.options = mapboxMapsFormatOptions(mData.mapboxOptions)}
 		// ID
 		if(mData.mapboxId) {marker.id = mData.mapboxId}
+		// Data
+		if(mData.mapboxData) {marker.data = mData.mapboxData.split(":")}
 		// Popup
 		if(mData.mapboxPopup) {
 			let pOptions = mapboxMapsFormatOptions(mData.mapboxPopup);
@@ -74,4 +77,4 @@ function mapboxMapsSetup(container) {
 	})}
 }
 
-document.querySelectorAll("[data-mapbox='container']").forEach((container) => {mapboxMapsSetup(container)})
+document.querySelectorAll("[data-mapbox='container']").forEach((container) => {mapboxMapsSetup(container)});
