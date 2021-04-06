@@ -409,7 +409,7 @@ lsRef.forEach((ls, lsId) => {
 		ls.updaters.forEach(e => {
 			e.addEventListener("click", () => {lsApplyFilters(lsId)})})
 	}
-	// datawait
+	// datawait setup
 	let datawait = false;
 	if(ls.cont.hasAttribute("data-ls-api-wait")) {
 		let z = ls.cont.getAttribute("data-ls-api-wait");
@@ -474,6 +474,7 @@ lsRef.forEach((ls, lsId) => {
 			}
 		});
 	}
+	// datawait
 	if(datawait) {
 		if(ls.hasOwnProperty("filters")) {
 			ls.filters.forEach(e => {
@@ -485,35 +486,15 @@ lsRef.forEach((ls, lsId) => {
 			if(ls.datawait.type == "all") {
 				setTimeout(() => {
 					if(!ls.datawait.loaded) {
-						console.log("FALLBACK");
 						ls.datawait.type = "fallback";
 						lsDatawait(lsId, false)
 					}
-				}, 1000)
+				}, 5000)
 			}
 		}
 		lsDatawait(lsId, true);
 		if(ls.datawait.type == "selected") {setTimeout(() => {lsApplyFilters(lsId)}, 0)}
 	}
 	else {setTimeout(() => {lsUpdateFilters(lsId)}, 0)}
-	//
-	/*if(datawait) {
-		if(ls.hasOwnProperty("filters")) {
-			ls.filters.forEach(e => {
-				ls.datawait.selected.forEach(f => {
-					if(e == f && e.value != "") {ls.datawait.type = "all"; return}});
-				if(ls.datawait.type == "all") {
-					setTimeout(() => {
-						if(!ls.datawait.loaded) {
-							console.log("FALLBACK");
-							ls.datawait.type = "fallback"; lsDatawait(lsId, false)}
-						}, 1000);
-					return}
-			})
-		}
-		lsDatawait(lsId, true);
-		if(ls.datawait.type == "selected") {setTimeout(() => {lsApplyFilters(lsId)}, 0)}
-	}
-	else {setTimeout(() => {lsUpdateFilters(lsId)}, 0)}*/
 	console.log(lsRef)
 });
