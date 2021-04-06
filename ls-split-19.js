@@ -308,12 +308,13 @@ function lsToArray(x) {
 
 function lsDatawait(lsId, x) {
 	if(lsId == undefined || x == undefined) {return}
+	let y = false; if(x === false) {y = true}
 	lsRef.forEach(ls => {
 		if(ls.id == lsId && ls.hasOwnProperty("datawait")) {
 			if(ls.datawait.hasOwnProperty("type")) {
 				if(ls.datawait.hasOwnProperty("selected")) {
 					ls.datawait.selected.forEach(e => {
-						lsActiveInactive(e, x); e.disabled = x})
+						lsActiveInactive(e, y); e.disabled = x})
 				}
 				if(x === true) {
 					if(ls.datawait.type == "full") {lsApplyFilters(lsId)}
