@@ -437,7 +437,6 @@ lsRef.forEach((ls, lsId) => {
 				}
 			})
 		}
-		//lsDatawait(lsId, true)
 	}
 	// URL params
 	if(window.location.href.includes("?") && ls.hasOwnProperty("filters")) {
