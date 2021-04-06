@@ -316,7 +316,6 @@ function lsDatawait(lsId, x) {
 				ls.filters.forEach(e => {z.push(e)})}
 			else {z = ls.datawait.selected}
 			z.forEach(e => {lsActiveInactive(e, y); e.disabled = x});
-			//if(x === false && ls.datawait.type == "all") {lsApplyFilters(lsId)}
 			if(x === false) {
 				if(ls.datawait.type == "fallback") {
 					lsApplyFilters(lsId); ls.datawait.type = "all"}
@@ -327,28 +326,6 @@ function lsDatawait(lsId, x) {
 		}
 	})
 }
-
-/*function lsDatawait(lsId, x) {
-	if(lsId == undefined || x == undefined) {return}
-	let y = false; if(x === false) {y = true}
-	lsRef.forEach(ls => {
-		if(ls.id == lsId && ls.hasOwnProperty("datawait")) {
-			if(ls.datawait.hasOwnProperty("type")) {
-				if(ls.datawait.type == "all") {
-					ls.datawait.selected = [];
-					ls.filters.forEach(e => {ls.datawait.selected.push(e)})
-				}
-				if(ls.datawait.hasOwnProperty("selected")) {
-					ls.datawait.selected.forEach(e => {
-						lsActiveInactive(e, y); e.disabled = x})
-				}
-				if(x === false) {
-					if(ls.datawait.type == "all") {lsApplyFilters(lsId)}
-				}
-			}
-		}
-	})
-}*/
 
 function lsGetApi(url, callback) {
 	let xhr = new XMLHttpRequest();
@@ -501,6 +478,29 @@ lsRef.forEach((ls, lsId) => {
 		if(ls.hasOwnProperty("filters")) {
 			ls.filters.forEach(e => {
 				ls.datawait.selected.forEach(f => {
+					if(e == f && e.value != "") {ls.datawait.type = "all"; return}
+				});
+				if(ls.datawait.type == "all") {return}
+			});
+			if(ls.datawait.type == "all") {
+				setTimeout(() => {
+					if(!ls.datawait.loaded) {
+						console.log("FALLBACK");
+						ls.datawait.type = "fallback";
+						lsDatawait(lsId, false)
+					}
+				}, 1000)
+			}
+		}
+		lsDatawait(lsId, true);
+		if(ls.datawait.type == "selected") {setTimeout(() => {lsApplyFilters(lsId)}, 0)}
+	}
+	else {setTimeout(() => {lsUpdateFilters(lsId)}, 0)}
+	//
+	/*if(datawait) {
+		if(ls.hasOwnProperty("filters")) {
+			ls.filters.forEach(e => {
+				ls.datawait.selected.forEach(f => {
 					if(e == f && e.value != "") {ls.datawait.type = "all"; return}});
 				if(ls.datawait.type == "all") {
 					setTimeout(() => {
@@ -514,6 +514,6 @@ lsRef.forEach((ls, lsId) => {
 		lsDatawait(lsId, true);
 		if(ls.datawait.type == "selected") {setTimeout(() => {lsApplyFilters(lsId)}, 0)}
 	}
-	else {setTimeout(() => {lsUpdateFilters(lsId)}, 0)}
+	else {setTimeout(() => {lsUpdateFilters(lsId)}, 0)}*/
 	console.log(lsRef)
 });
