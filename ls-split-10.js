@@ -25,7 +25,32 @@ function lsActiveInactive(e, x) {
 		e.querySelector("[data-ls-int='" + int + "']").click()}
 }
 
-// lsUpdateURL
+function lsUpdateURL() {
+	let x = "?";
+	lsRef.forEach(ls => {
+		if(ls.hasOwnProperty("id") && ls.hasOwnProperty("activeFilters")) {
+			let y = "";
+			for(z in ls.activeFilters) {
+				let a = ls.activeFilters[z], b;
+				if(a instanceof Date) {
+					let utc = [a.getFullYear(), a.getMonth(), a.getDate()];
+					let c = new Date(Date.UTC(utc[0], utc[1], utc[2]));
+					b = c.toISOString().split("T")[0]
+				}
+				else if(Array.isArray(a)) {
+					b = "";
+					a.forEach(c => {b += "_" + c});
+					b = b.replace("_", "")
+				}
+				else {b = a}
+				if(b !== undefined) {y += "&" + z + "=" + b}
+			}
+			if(y != "") {x += "id=" + ls.id + y}
+		}
+	});
+	if(x == "?") {x = window.location.href.split("?")[0]}
+	window.history.replaceState({}, "", x)
+}
 
 function lsUpdateCounters(lsId) {
 	if(lsId === undefined) {return}
@@ -248,10 +273,7 @@ function lsUpdateFilters(lsId) {
 							if(x.includes("+")) {x = [x.replace("+", ""), "+"]}
 							else if(x.includes("-")) {
 								x = x.split("-");
-								console.log(x);
 								x.forEach((z, i) => {if(z == "") {x[i] = "-"}})
-								console.log(x);
-								//if(x.length == 1) {x.push("-")}
 							}
 							x.forEach((z, i) => {if(!isNaN(z)) {x[i] = Number(z)}})
 						}
@@ -284,6 +306,21 @@ function lsToArray(x) {
 	return y
 }
 
+function lsDatawait(lsId) {
+	if(lsId == undefined) {return}
+	lsRef.forEach(ls => {
+		if(ls.id == lsId && ls.hasOwnProperty("datawait")) {
+			if(ls.datawait.hasOwnProperty("type")) {
+				if(ls.datawait.hasOwnProperty("fields")) {
+					ls.datawait.fields.forEach(e => {e.disabled = false})
+				}
+				if(ls.datawait.type == "fields") {}
+				else if(ls.datawait.type == "full") {lsApplyFilters(lsId)}
+			}
+		}
+	})
+}
+
 function lsGetApi(url, callback) {
 	let xhr = new XMLHttpRequest();
 	xhr.open("GET", url, true);
@@ -296,33 +333,6 @@ function lsGetApi(url, callback) {
 	xhr.send()
 }
 
-function lsUpdateURL() {
-	let x = "?";
-	lsRef.forEach(ls => {
-		if(ls.hasOwnProperty("id") && ls.hasOwnProperty("activeFilters")) {
-			let y = "";
-			for(z in ls.activeFilters) {
-				let a = ls.activeFilters[z], b;
-				if(a instanceof Date) {
-					let utc = [a.getFullYear(), a.getMonth(), a.getDate()];
-					let c = new Date(Date.UTC(utc[0], utc[1], utc[2]));
-					b = c.toISOString().split("T")[0]
-				}
-				else if(Array.isArray(a)) {
-					b = "";
-					a.forEach(c => {b += "_" + c});
-					b = b.replace("_", "")
-				}
-				else {b = a}
-				if(b !== undefined) {y += "&" + z + "=" + b}
-			}
-			if(y != "") {x += "id=" + ls.id + y}
-		}
-	});
-	if(x == "?") {x = window.location.href.split("?")[0]}
-	window.history.replaceState({}, "", x)
-}
-
 // Initial Setup
 var lsRef = lsToArray(document.querySelectorAll("[data-ls='container']"));
 lsRef.forEach((ls, lsId) => {
@@ -331,9 +341,10 @@ lsRef.forEach((ls, lsId) => {
 	ls = lsRef[lsId];
 	// API request
 	if(ls.cont.hasAttribute("data-ls-api")) {
+		//if(ls.cont.hasAttribute("data-ls-api-wait")) {ls.datawait = {"type": "fields"}}
 		lsGetApi(ls.cont.getAttribute("data-ls-api"), (err, data) => {
 			if(err !== null) {console.log("API GET Request error: " + err)}
-			else {ls.data = data; lsApplyFilters(lsId)}
+			else {ls.data = data; lsDatawait(lsId)}
 		})
 	}
 	// datepickers
@@ -393,6 +404,29 @@ lsRef.forEach((ls, lsId) => {
 		ls.updaters.forEach(e => {
 			e.addEventListener("click", () => {lsApplyFilters(lsId)})})
 	}
+	// datawait
+	if(ls.cont.hasAttribute("data-ls-api-wait")) {
+		let z = ls.cont.getAttribute("data-ls-api-wait");
+		ls.datawait = {"type": "selected", "selected": []}
+		if(z == "all") {ls.datawait.type = "all"}
+		else {
+			z = z.split("&"); console.log(z);
+			z.forEach(a => {
+				if(a.includes("=")) {
+					a = a.split("=");
+					if(a[0] == "type") {
+						if(ls.hasOwnProperty("filters")) {ls.filters.forEach(e => {
+							if(e.hasAttribute("data-ls-type")) {
+								if(e.getAttribute("data-ls-type") == z[1]) {
+									ls.datawait.selected.push(e)}
+							}
+						})}
+					}
+				}
+				else {ls.datawait.selected.push(ls.cont.querySelector(a))}
+			})
+		}
+	}
 	// URL params
 	if(window.location.href.includes("?") && ls.hasOwnProperty("filters")) {
 		let y = window.location.href.split("?")[1].split("&"), id;
@@ -421,7 +455,6 @@ lsRef.forEach((ls, lsId) => {
 							if(z[1].includes("+") || z[1].includes("-")) {
 								z[1] = z[1].replace("_", "")}
 							else {z[1] = z[1].replace("_", "-")}
-							console.log(z[1]);
 							a.value = z[1]
 						}
 						else {a.value = z[1]}
