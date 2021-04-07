@@ -472,7 +472,7 @@ lsRef.forEach((ls, lsId) => {
 							a.value = z[1]
 						}
 						else if(b == "checkbox") {
-							if(z[1] == "true") {a.click()}
+							if(z[1] == "true") {a.parentNode.click()}
 						}
 						else {a.value = z[1]}
 						//a.value = z[1]
