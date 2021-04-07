@@ -472,7 +472,7 @@ lsRef.forEach((ls, lsId) => {
 							a.value = z[1]
 						}
 						else if(b == "checkbox") {
-							if(z[1] == "true") {setTimeout(() => {a.checked = true}, 2000)}
+							if(z[1] == "true") {a.checked = true}
 							else {a.checked = false}
 						}
 						else {a.value = z[1]}
