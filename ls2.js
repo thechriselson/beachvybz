@@ -277,6 +277,10 @@ function lsUpdateFilters(lsId) {
 							}
 							x.forEach((z, i) => {if(!isNaN(z)) {x[i] = Number(z)}})
 						}
+						else if(y == "checkbox") {
+							if(e.checked == true) {x = "true"}
+							else {return}
+						}
 					}
 					ls.activeFilters[e.getAttribute("data-ls-filter")] = x
 				}
