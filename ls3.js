@@ -471,8 +471,11 @@ lsRef.forEach((ls, lsId) => {
 							else {z[1] = z[1].replace("_", "-")}
 							a.value = z[1]
 						}
+						else if(b == "checkbox") {
+							if(z[1] == "true") {a.click()}
+						}
 						else {a.value = z[1]}
-						a.value = z[1]
+						//a.value = z[1]
 					}
 				})
 			}
