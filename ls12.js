@@ -167,6 +167,7 @@ function lsUpdateListings(lsId) {
 				if(e.querySelector("[data-mapbox-id]")) {
 					console.log("UPDATE MARKER");
 					let f = document.getElementById(e.querySelector("[data-mapbox-id]").getAttribute("data-mapbox-id"));
+					console.log(f);
 					lsActiveInactive(f, z)
 				}
 			});
