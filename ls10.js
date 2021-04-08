@@ -165,7 +165,10 @@ function lsUpdateListings(lsId) {
 				lsActiveInactive(e, z);
 				// map marker
 				if(e.querySelector("[data-mapbox-id]")) {
-					let f = document.getElementById(e.querySelector("[data-mapbox-id]").getAttribute("data-mapbox-id"));
+					let f = e.querySelector("[data-mapbox-id]");
+					f = f.getAttribute("data-mapbox-id");
+					f = document.getElementById(f);
+					//let f = document.getElementById(e.querySelector("[data-mapbox-id]").getAttribute("data-mapbox-id"));
 					lsActiveInactive(f, z)
 				}
 			});
