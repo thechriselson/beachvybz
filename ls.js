@@ -12,12 +12,12 @@ function lsActiveInactive(e, x) {
 	else {s1 = inac; s2 = ac}
 	if(s1 !== undefined) {
 		if(s1.length >= 2) {
-			if(s1[0] == "class") {console.log("ACTIVE"); e.classList.remove(s1[1])}
+			if(s1[0] == "class") {e.classList.remove(s1[1])}
 		}
 	}
 	if(s2 !== undefined) {
 		if(s2.length >= 2) {
-			if(s2[0] == "class") {console.log("INACTIVE"); e.classList.add(s2[1])}
+			if(s2[0] == "class") {e.classList.add(s2[1])}
 			else if(s2[0] == "int") {int = s2[1]}
 		}
 	}
@@ -165,9 +165,7 @@ function lsUpdateListings(lsId) {
 				lsActiveInactive(e, z);
 				// map marker
 				if(e.querySelector("[data-mapbox-id]")) {
-					console.log("UPDATE MARKER");
 					let f = document.getElementById(e.querySelector("[data-mapbox-id]").getAttribute("data-mapbox-id"));
-					console.log(f);
 					lsActiveInactive(f, z)
 				}
 			});
@@ -288,9 +286,7 @@ function lsUpdateFilters(lsId) {
 				}
 			})
 		}
-	});
-	console.log("ACTIVEFILTERS UPDATED");
-	console.log(lsRef)
+	})
 }
 
 function lsApplyFilters(lsId) {
